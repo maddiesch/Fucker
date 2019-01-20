@@ -1,21 +1,28 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ruby
 
-pushd () {
-  command pushd "$@" > /dev/null
-}
+require 'fileutils'
 
-popd () {
-  command popd "$@" > /dev/null
-}
+ROOT_PATH = File.expand_path("#{__dir__}/../src")
+BUILD_LOCATION = File.expand_path("#{__dir__}/../.package")
 
-pushd ./Example/Program
-  current=$(pwd)
-  rm -rf .build
-  mkdir .build
-  for filename in *.bf; do
-    pushd ./bin
-      echo $current/$filename
-      ./Fucker file://$current/$filename > "../.build/$filename.swift"
-    popd
-  done
-popd
+FileUtils.rm_rf(BUILD_LOCATION) if File.exist?(BUILD_LOCATION)
+FileUtils.mkdir(BUILD_LOCATION)
+
+Dir.glob(ROOT_PATH + '/**/*.bf').each do |file|
+  tmp = BUILD_LOCATION + '/.current.tmp'
+  begin
+    output = BUILD_LOCATION + file.gsub(ROOT_PATH, '').gsub(/\.bf$/, '.swift')
+  ensure
+    FileUtils.rm(tmp) if File.exist?(tmp)
+  end
+  # tmp = ROOT_PATH + '/.cur.tmp'
+  # File.open(tmp, 'w') do |output|
+  #   File.open(file, 'r') do |input|
+  #     until input.eof?
+  #       chunk = input.read(2560).gsub("\n", '')
+  #       output.write(chunk.scan(/.{,80}/).join("\n"))
+  #     end
+  #   end
+  # end
+  # FileUtils.mv(tmp, file)
+end
