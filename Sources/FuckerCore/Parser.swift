@@ -2,7 +2,7 @@
 //  Parser.swift
 //  FuckerCore
 //
-//  Created by Skylar Schipper on 3/7/18.
+//  Created by Maddie Schipper on 3/7/18.
 //
 
 internal final class Parser {

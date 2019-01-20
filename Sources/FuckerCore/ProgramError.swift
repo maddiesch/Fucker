@@ -2,9 +2,11 @@
 //  ProgramError.swift
 //  FuckerCore
 //
-//  Created by Skylar Schipper on 3/7/18.
+//  Created by Maddie Schipper on 3/7/18.
 //
 
+
+/// An error thrown by the interpreter.
 public struct ProgramError : Error {
     public enum Severity : Int {
         case fatal       = 0

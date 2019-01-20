@@ -3,29 +3,31 @@ import FuckerCore
 
 let args = Cli.parseArguments(ProcessInfo.processInfo.arguments)
 
-guard args.unnamed.count >= 2 else {
-    print("No program input")
-    exit(EXIT_FAILURE)
-}
+var program = args.named["--program"]
 
-let input = args.unnamed.last!
-
-var program: String? = nil
-
-if let url = URL(string: input) {
-    guard url.isFileURL else {
-        print("Found a valid URL that doesn't point to a file")
+if program == nil {
+    guard args.unnamed.count >= 2 else {
+        print("No program input")
         exit(EXIT_FAILURE)
     }
-    let abs = URL(fileURLWithPath: "\(url.host ?? "")\(url.path)")
-    do {
-        program = try String(contentsOf: abs)
-    } catch {
-        print("Failed to find input file \(error.localizedDescription)")
-        exit(EXIT_FAILURE)
+
+    let input = args.unnamed.last!
+
+    if let url = URL(string: input) {
+        guard url.isFileURL else {
+            print("Found a valid URL that doesn't point to a file")
+            exit(EXIT_FAILURE)
+        }
+        let abs = URL(fileURLWithPath: "\(url.host ?? "")\(url.path)")
+        do {
+            program = try String(contentsOf: abs)
+        } catch {
+            print("Failed to find input file \(error.localizedDescription)")
+            exit(EXIT_FAILURE)
+        }
+    } else {
+        program = input
     }
-} else {
-    program = input
 }
 
 

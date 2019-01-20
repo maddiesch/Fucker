@@ -2,12 +2,20 @@
 //  Parser.swift
 //  FuckerCore
 //
-//  Created by Skylar Schipper on 3/7/18.
+//  Created by Maddie Schipper on 3/7/18.
 //
 
+
+/// The Brainfuck program interpreter.
 public class Interpreter {
+    
+    /// The current state of the program.
     private let state: State
+    
+    /// The commands that makeup the program.
     private let program: Array<Command>
+    
+    /// The current location in the program for execution.
     private var cursor: Int = 0
 
     private init(_ program: Array<Command>) {
@@ -92,6 +100,11 @@ public class Interpreter {
                 }
             }
         }
+    }
+    
+    public func dump() {
+        print("Fucker State:")
+        self.state.dump(2)
     }
 }
 

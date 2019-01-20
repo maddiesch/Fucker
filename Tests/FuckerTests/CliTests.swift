@@ -2,7 +2,7 @@
 //  CliTests.swift
 //  FuckerTests
 //
-//  Created by Skylar Schipper on 3/13/18.
+//  Created by Maddie Schipper on 3/13/18.
 //
 
 import XCTest
