@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+
+ROOT_PATH = File.expand_path("#{__dir__}/../src")
+BUILD_LOCATION = File.expand_path("#{__dir__}/../.package")
+
+FileUtils.rm_rf(BUILD_LOCATION) if File.exist?(BUILD_LOCATION)
+FileUtils.mkdir(BUILD_LOCATION)
+
+Dir.glob(ROOT_PATH + '/**/*.bf').each do |file|
+  output = BUILD_LOCATION + file.gsub(ROOT_PATH, '').gsub(/\.bf$/, '.swift')
+  FileUtils.mkdir_p(File.dirname(output)) unless File.exist?(File.dirname(output))
+  puts "Generating #{file.gsub(ROOT_PATH, '')}"
+  content = `#{__dir__}/Fucker file://#{file}`
+  File.open(output, 'w') do |f|
+    f.write(content)
+  end
+end
+
+puts 'Compiling...'
+
+compiled = `cd #{BUILD_LOCATION} && swift build --configuration release`
+location = compiled.split("\n").detect { |line| line =~ /^Linking/ }
+
+if location.nil?
+  puts 'Filed to compile Swift:'
+  puts '-' * 80
+  puts compiled
+  exit(1)
+end
+
+exec_file = File.expand_path("#{BUILD_LOCATION}/#{location.gsub('Linking ', '')}")
+
+FileUtils.cp(exec_file, File.expand_path("#{__dir__}/Fucker"))
