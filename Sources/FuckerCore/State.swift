@@ -5,7 +5,7 @@
 //  Created by Maddie Schipper on 3/7/18.
 //
 
-fileprivate let MaxPointer = 255
+fileprivate let MaxPointer = 4095
 
 internal class State {
     private var ptr: Int = 0
@@ -50,21 +50,21 @@ internal class State {
     func read() throws -> UInt8 {
         return self.buffer[self.ptr]
     }
-    
+
     func dump(_ offset: Int) {
         let padding = Array(repeating: " ", count: offset).joined(separator: "")
         var line = 0
         var cur = 0
         var buffered = ""
         var values: Array<Character> = []
-        
+
         print("\(padding)pointer: \(self.ptr)")
-        
+
         let prt: () -> Void = {
             let lineNum = String(format: "%02d", line)
             print("\(padding)\(lineNum): \(buffered)    [\(String(values).literalized())]")
         }
-        
+
         while (cur <= MaxPointer) {
             if (cur % 16 == 0 && cur != 0) {
                 prt()

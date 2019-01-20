@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+
+ROOT_PATH = File.expand_path("#{__dir__}/../")
+
+Dir.glob(ROOT_PATH + '/**/*.bf').each do |file|
+  tmp = ROOT_PATH + '/.cur.tmp'
+  File.open(tmp, 'w') do |output|
+    File.open(file, 'r') do |input|
+      until input.eof?
+        chunk = input.read(2560).gsub("\n", '')
+        output.write(chunk.scan(/.{,80}/).join("\n"))
+      end
+    end
+  end
+  FileUtils.mv(tmp, file)
+end

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+pushd () {
+  command pushd "$@" > /dev/null
+}
+
+popd () {
+  command popd "$@" > /dev/null
+}
+
+pushd ./Example/Program
+  current=$(pwd)
+  rm -rf .build
+  mkdir .build
+  for filename in *.bf; do
+    pushd ./bin
+      echo $current/$filename
+      ./Fucker file://$current/$filename > "../.build/$filename.swift"
+    popd
+  done
+popd
